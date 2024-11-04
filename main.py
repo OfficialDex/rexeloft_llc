@@ -8,6 +8,10 @@ app.config['DEBUG'] = True
 
 logging.basicConfig(level=logging.DEBUG)
 
+@app.route('/')
+def home():
+    return jsonify({"message": "Welcome to the Rexeloft LLC's Chatbot Ai (Intelix)"}), 200
+
 @app.route('/chat', methods=['POST'])
 def chat_response():
     data = request.json
