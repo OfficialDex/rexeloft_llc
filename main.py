@@ -60,21 +60,26 @@ def chat():
         return jsonify({'error': 'Emotion must be a boolean value'}), 400
 
     message = data['message']
-    history_enabled = plugins.get('history', False)
-    emotion_enabled = plugins.get('emotion', False)
+    print(f"Received message: {message}")  # Debugging output
 
-    response = intelix.chatbot_response(message)
+    try:
+        response = intelix.chatbot_response(message)
+        print(f"Chatbot response: {response}")  # Debugging output
 
-    if emotion_enabled:
-        emotion = intelix.detect_emotion(message)
-        emotion_response = intelix.respond_based_on_emotion(emotion)
-        return jsonify({
-            'response': response,
-            'emotion': emotion,
-            'emotion_response': emotion_response
-        })
+        if plugins.get('emotion', False):
+            emotion = intelix.detect_emotion(message)
+            emotion_response = intelix.respond_based_on_emotion(emotion)
+            return jsonify({
+                'response': response,
+                'emotion': emotion,
+                'emotion_response': emotion_response
+            })
 
-    return jsonify({'response': response})
+        return jsonify({'response': response})
+
+    except Exception as e:
+        print(f"Error: {e}")  # Log any exceptions for debugging
+        return jsonify({'error': 'An error occurred while processing your request.'}), 500
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
