@@ -3,7 +3,6 @@ from rexeloft_llc import intelix
 import os
 
 app = Flask(__name__)
-app.config['DEBUG'] = True
 
 @app.route('/')
 def home():
@@ -42,30 +41,14 @@ def home():
 @app.route('/chat', methods=['POST'])
 def chat():
     data = request.json
-    if not data:
-        return jsonify({'error': 'Request body is required'}), 400
-
-    if 'message' not in data:
-        return jsonify({'error': 'Message is required'}), 400
-    
-    if not isinstance(data['message'], str) or not data['message'].strip():
+    if not data or 'message' not in data or not isinstance(data['message'], str) or not data['message'].strip():
         return jsonify({'error': 'Message must be a non-empty string'}), 400
 
-    plugins = data.get('plugins', {})
-    
-    if 'history' in plugins and not isinstance(plugins['history'], bool):
-        return jsonify({'error': 'History must be a boolean value'}), 400
-    
-    if 'emotion' in plugins and not isinstance(plugins['emotion'], bool):
-        return jsonify({'error': 'Emotion must be a boolean value'}), 400
-
     message = data['message']
-    print(f"Received message: {message}")  # Debugging output
+    plugins = data.get('plugins', {})
 
     try:
         response = intelix.chatbot_response(message)
-        print(f"Chatbot response: {response}")  # Debugging output
-
         if plugins.get('emotion', False):
             emotion = intelix.detect_emotion(message)
             emotion_response = intelix.respond_based_on_emotion(emotion)
@@ -74,11 +57,8 @@ def chat():
                 'emotion': emotion,
                 'emotion_response': emotion_response
             })
-
         return jsonify({'response': response})
-
     except Exception as e:
-        print(f"Error: {e}")  # Log any exceptions for debugging
         return jsonify({'error': 'An error occurred while processing your request.'}), 500
 
 if __name__ == '__main__':
