@@ -127,14 +127,26 @@ def respond_based_on_emotion(emotion):
 def query_external_api(question):
     try:
         params = {'soru': question}
+        print(f"Querying external API with URL: {api_url} and parameters: {params}")
         response = requests.get(api_url, params=params)
+
         if response.status_code == 200:
             result = response.json()
+            print(f"Received successful response from API: {result}")
             return result.get('cevap')
         else:
+            print(f"API request failed with status code: {response.status_code}")
+            print(f"Response text: {response.text}")
             return None
+    except requests.exceptions.RequestException as e:
+        print(f"RequestException encountered: {e}")
+        return None
+    except json.JSONDecodeError as e:
+        print(f"JSON decoding failed: {e}")
+        print(f"Response content that failed to decode: {response.content}")
+        return None
     except Exception as e:
-        print(f"Error querying API: {e}")
+        print(f"Unexpected error querying API: {e}")
         return None
 
 def should_store_question(question):
@@ -204,22 +216,3 @@ def chat():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
-
-# Test API after starting the server
-def test_api():
-    url = "http://127.0.0.1:5000/chat"
-    test_message = {
-        "message": "hello?",
-        "plugins": {
-            "history": True,
-            "emotion": True
-        }
-    }
-    response = requests.post(url, json=test_message)
-    if response.status_code == 200:
-        print("API Test Response:", response.json())
-    else:
-        print("API Test Failed:", response.status_code, response.text)
-
-# Uncomment the line below to run the test after starting the Flask app
-test_api()
