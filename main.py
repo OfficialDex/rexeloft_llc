@@ -1,65 +1,225 @@
 from flask import Flask, request, jsonify
-from rexeloft_llc import intelix
+import json
+import re
+import requests
+from googletrans import Translator
+from fuzzywuzzy import fuzz
+from nltk.stem import WordNetLemmatizer
+from nltk.stem import PorterStemmer
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from functools import lru_cache
+from difflib import SequenceMatcher
+import random
+import nltk
 import os
+
+nltk.download('wordnet')
+nltk.download('averaged_perceptron_tagger')
 
 app = Flask(__name__)
 
-@app.route('/')
-def home():
-    return jsonify({
-        "API Documentation": {
-            "Credits": "This API is developed by Rexeloft LLC.",
-            "/chat": {
-                "method": "POST",
-                "description": "Chat with the Intelix chatbot.",
-                "request_format": {
-                    "message": "User's message as a string.",
-                    "plugins": {
-                        "history": "Enable conversation history (true or false).",
-                        "emotion": "Enable emotion detection (true or false)."
-                    }
-                },
-                "example_request": {
-                    "message": "What is the capital of India?",
-                    "plugins": {
-                        "history": True,
-                        "emotion": False
-                    }
-                },
-                "response_format": {
-                    "response": "Chatbot response as a string.",
-                    "emotion": "Detected emotion (if emotion plugin is enabled).",
-                    "emotion_response": "Emotion-based response (if emotion plugin is enabled)."
-                },
-                "example_response": {
-                    "response": "The capital of India is New Delhi."
-                }
-            }
-        }
-    })
+dataset = {
+    "Who owns you?": "I am owned by Rexeloft LLC",
+    "Who created you?": "I was created in October 2024 by Rexeloft LLC"
+}
+
+synonyms = {
+    "wtf": "what the fuck", "idk": "I don't know"
+}
+
+emotion_responses = {
+    'happy': ["I'm glad to hear that!", "That's awesome!", "Yay!", "Very nice!"],
+    'sad': ["I'm sorry to hear that.", "I hope things get better soon.", "Stay strong!", "Never give up!"],
+    'angry': ["Take a deep breath.", "I apologize if I did something wrong.", "Sorry if I did anything wrong"],
+    'neutral': ["Got it.", "Understood.", "Okay!", "Alright!", "Bet"]
+}
+
+api_url = "https://tilki.dev/api/hercai"
+conversation_history = []
+stemmer = PorterStemmer()
+
+def trim_conversation_history():
+    global conversation_history
+    all_words = ' '.join(conversation_history).split()
+    if len(all_words) > 70:
+        trimmed_words = all_words[-70:]
+        conversation_history = [' '.join(trimmed_words[i:i+10]) for i in range(0, len(trimmed_words), 10)]
+
+def detect_language(text):
+    translator = Translator()
+    detection = translator.detect(text)
+    return detection.lang
+
+def translate_to_english(text):
+    translator = Translator()
+    translation = translator.translate(text, dest='en')
+    return translation.text
+
+def translate_from_english(text, lang):
+    translator = Translator()
+    translation = translator.translate(text, dest=lang)
+    return translation.text
+
+@lru_cache(maxsize=1000)
+def lemmatize_word(word):
+    lemmatizer = WordNetLemmatizer()
+    return lemmatizer.lemmatize(word)
+
+def replace_synonyms(text):
+    words = text.split()
+    replaced_words = [synonyms.get(word.lower(), word) for word in words]
+    return ' '.join(replaced_words)
+
+def normalize_and_lemmatize(text):
+    text = text.lower()
+    words = re.findall(r'\w+', text)
+    lemmatized_words = [lemmatize_word(word) for word in words]
+    return ' '.join(lemmatized_words)
+
+def get_word_similarity(word1, word2):
+    return SequenceMatcher(None, word1, word2).ratio()
+
+def get_most_similar_question(question):
+    questions = list(dataset.keys())
+    if not questions:
+        return None
+
+    question_words = question.lower().split()
+    expanded_question = set(stemmer.stem(word) for word in question_words)
+
+    highest_ratio = 0
+    most_similar_question = None
+
+    for q in questions:
+        q_words = q.lower().split()
+        expanded_q = set(stemmer.stem(word) for word in q_words)
+
+        common_words = expanded_question.intersection(expanded_q)
+        similarity_ratio = len(common_words) / len(expanded_question.union(expanded_q))
+
+        fuzzy_ratio = fuzz.token_set_ratio(question, q) / 100
+        word_similarity = sum(get_word_similarity(w1, w2) for w1 in expanded_question for w2 in expanded_q) / (len(expanded_question) * len(expanded_q))
+
+        combined_score = (similarity_ratio + fuzzy_ratio + word_similarity) / 3
+        if combined_score > highest_ratio:
+            highest_ratio = combined_score
+            most_similar_question = q
+
+    if highest_ratio > 0.5:
+        return most_similar_question
+    return None
+
+def detect_emotion(text):
+    analyzer = SentimentIntensityAnalyzer()
+    sentiment_scores = analyzer.polarity_scores(text)
+    compound_score = sentiment_scores['compound']
+
+    if compound_score >= 0.25:
+        return 'happy'
+    elif compound_score <= -0.25:
+        return 'angry' if compound_score <= -0.5 else 'sad'
+    else:
+        return 'neutral'
+
+def respond_based_on_emotion(emotion):
+    return random.choice(emotion_responses[emotion])
+
+def query_external_api(question):
+    try:
+        params = {'soru': question}
+        response = requests.get(api_url, params=params)
+        if response.status_code == 200:
+            result = response.json()
+            return result.get('cevap')
+        else:
+            return None
+    except Exception as e:
+        print(f"Error querying API: {e}")
+        return None
+
+def should_store_question(question):
+    keywords = ["which", "who", "when", "how", "explain", "define"]
+    return any(keyword in question.lower() for keyword in keywords)
+
+def answer_question(question):
+    normalized_question = normalize_and_lemmatize(replace_synonyms(question))
+    similar_question = get_most_similar_question(normalized_question)
+
+    if similar_question:
+        return dataset[similar_question]
+    else:
+        return None
+
+def chatbot_response(user_input, use_history, use_emotion):
+    global conversation_history
+
+    dataset_answer = answer_question(user_input)
+
+    if dataset_answer:
+        if use_history:
+            conversation_history.append(f"You: {user_input}")
+            conversation_history.append(f"Bot: {dataset_answer}")
+            trim_conversation_history()
+        return dataset_answer
+
+    if use_history:
+        conversation_history.append(f"You: {user_input}")
+        history_string = "\n".join(conversation_history)
+    else:
+        history_string = user_input
+
+    api_response = query_external_api(history_string)
+    if api_response and should_store_question(user_input):
+        dataset[normalize_and_lemmatize(user_input)] = api_response[:len(api_response)//2] if len(api_response) > 200 else api_response
+
+    if use_history:
+        conversation_history.append(f"Bot: {api_response if api_response else 'I don’t have an answer.'}")
+        trim_conversation_history()
+    return api_response if api_response else "I'm sorry, I don't have an answer for that."
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    data = request.json
-    if not data or 'message' not in data or not isinstance(data['message'], str) or not data['message'].strip():
-        return jsonify({'error': 'Message must be a non-empty string'}), 400
-
-    message = data['message']
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided. Please send a JSON payload with 'message'."}), 400
+    user_input = data.get('message')
     plugins = data.get('plugins', {})
 
-    try:
-        response = intelix.chatbot_response(message)
-        if plugins.get('emotion', False):
-            emotion = intelix.detect_emotion(message)
-            emotion_response = intelix.respond_based_on_emotion(emotion)
-            return jsonify({
-                'response': response,
-                'emotion': emotion,
-                'emotion_response': emotion_response
-            })
-        return jsonify({'response': response})
-    except Exception as e:
-        return jsonify({'error': 'An error occurred while processing your request.'}), 500
+    if not user_input:
+        return jsonify({"error": "No 'message' provided in JSON payload."}), 400
 
-if __name__ == '__main__':
+    use_history = plugins.get("history", False)
+    use_emotion = plugins.get("emotion", False)
+
+    emotion_response = ""
+    if use_emotion:
+        emotion = detect_emotion(user_input)
+        emotion_response = respond_based_on_emotion(emotion)
+
+    response = chatbot_response(user_input, use_history, use_emotion)
+    return jsonify({
+        "emotion_response": emotion_response if use_emotion else None,
+        "bot_response": response
+    })
+
+if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
+# Test API after starting the server
+def test_api():
+    url = "http://127.0.0.1:5000/chat"
+    test_message = {
+        "message": "hello?",
+        "plugins": {
+            "history": True,
+            "emotion": True
+        }
+    }
+    response = requests.post(url, json=test_message)
+    if response.status_code == 200:
+        print("API Test Response:", response.json())
+    else:
+        print("API Test Failed:", response.status_code, response.text)
+
+# Uncomment the line below to run the test after starting the Flask app
+test_api()
