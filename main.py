@@ -214,5 +214,56 @@ def chat():
         "bot_response": response
     })
 
+@app.route('/')
+def main_page():
+    """
+    Endpoint: /
+    Method: GET
+
+    Description:
+    Provides a human-readable API documentation for the Rexeloft API in HTML format.
+    """
+    return """
+    <html>
+        <head><title>Rexeloft API Documentation</title></head>
+        <body>
+            <h1>Rexeloft API Documentation</h1>
+
+            <h2>Welcome to the Rexeloft API</h2>
+            <p>This API allows you to interact with the Rexeloft chatbot and utilize various plugins such as emotion detection and conversation history.</p>
+
+            <h2>Available Endpoints</h2>
+
+            <h3>1. /chat (POST)</h3>
+            <p><strong>Description:</strong> Processes a user message and optionally applies emotion detection and conversation history.</p>
+            <p><strong>Request Body (JSON):</strong></p>
+            <pre>{
+    "message": "Who owns you?",
+    "plugins": {
+        "history": true,
+        "emotion": true
+    }
+}</pre>
+            <p><strong>Response (JSON):</strong></p>
+            <pre>{
+    "emotion_response": "I'm glad to hear that!",
+    "bot_response": "I am owned by Rexeloft LLC"
+}</pre>
+            <p><strong>Error Responses (400):</strong></p>
+            <pre>{
+    "error": "No 'message' provided in JSON payload."
+}</pre>
+
+            <h3>2. /docs (GET)</h3>
+            <p><strong>Description:</strong> Provides JSON documentation for all API endpoints, useful for developers to integrate with the API.</p>
+            <p><strong>Response (JSON):</strong> Detailed information about the API's available endpoints.</p>
+
+            <footer>
+                <p>&copy; 2024 Rexeloft LLC</p>
+            </footer>
+        </body>
+    </html>
+    """
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
