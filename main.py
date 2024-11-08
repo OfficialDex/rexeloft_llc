@@ -12,6 +12,7 @@ from difflib import SequenceMatcher
 import random
 import nltk
 import os
+from requests_html import HTMLSession  # Importing requests-html for handling JavaScript and cookies
 
 nltk.download('wordnet')
 nltk.download('averaged_perceptron_tagger')
@@ -124,12 +125,20 @@ def detect_emotion(text):
 def respond_based_on_emotion(emotion):
     return random.choice(emotion_responses[emotion])
 
+# Updated function to use requests-html for handling JavaScript and cookies
 def query_external_api(question):
+    session = HTMLSession()
+
     try:
+        # Make an initial GET request to the API that requires JavaScript execution
         params = {'soru': question}
         print(f"Querying external API with URL: {api_url} and parameters: {params}")
-        response = requests.get(api_url, params=params)
+        response = session.get(api_url, params=params)
 
+        # Render the page to handle JavaScript and set cookies
+        response.html.render()  # This will process JavaScript and store cookies
+
+        # If the request is successful, process the response
         if response.status_code == 200:
             result = response.json()
             print(f"Received successful response from API: {result}")
@@ -258,12 +267,26 @@ def main_page():
             <p><strong>Description:</strong> Provides JSON documentation for all API endpoints, useful for developers to integrate with the API.</p>
             <p><strong>Response (JSON):</strong> Detailed information about the API's available endpoints.</p>
 
+            <h2>Plugins</h2>
+            <p>The API supports two plugins:</p>
+            <ul>
+                <li><strong>history</strong>: Enables conversation history. If set to true, the chatbot remembers past interactions.</li>
+                <li><strong>emotion</strong>: Enables emotion detection. If set to true, the chatbot will respond based on the detected emotion of the user.</li>
+            </ul>
+
+            <h2>Handling Errors</h2>
+            <p>If a required field is missing in the request, or if an error occurs during processing, the API will return an appropriate error message in JSON format.</p>
+            <p><strong>Example error response (JSON):</strong></p>
+            <pre>{
+    "error": "No 'message' provided in JSON payload."
+}</pre>
+
             <footer>
                 <p>&copy; 2024 Rexeloft LLC</p>
             </footer>
         </body>
     </html>
     """
-
-if __name__ == "__main__":
+    if __name__ == '__main__':
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    
