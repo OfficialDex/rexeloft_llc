@@ -12,7 +12,7 @@ from difflib import SequenceMatcher
 import random
 import nltk
 import os
-from requests_html import HTMLSession  # Importing requests-html for handling JavaScript and cookies
+from requests_html import HTMLSession
 
 nltk.download('wordnet')
 nltk.download('averaged_perceptron_tagger')
@@ -125,39 +125,50 @@ def detect_emotion(text):
 def respond_based_on_emotion(emotion):
     return random.choice(emotion_responses[emotion])
 
-# Updated function to use requests-html for handling JavaScript and cookies
+# Updated function to use requests-html with a User-Agent header
 def query_external_api(question):
     session = HTMLSession()
 
+    # User-Agent header
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0 Safari/537.36'
+    }
+
     try:
-        # Make an initial GET request to the API that requires JavaScript execution
         params = {'soru': question}
         print(f"Querying external API with URL: {api_url} and parameters: {params}")
-        response = session.get(api_url, params=params)
 
-        # Render the page to handle JavaScript and set cookies
-        response.html.render()  # This will process JavaScript and store cookies
+        # Send the GET request with headers and parameters
+        response = session.get(api_url, headers=headers, params=params)
 
-        # If the request is successful, process the response
+        # Render the page to handle JavaScript and store cookies
+        response.html.render(timeout=10)
+
+        # Debugging based on response status code
         if response.status_code == 200:
-            result = response.json()
-            print(f"Received successful response from API: {result}")
-            return result.get('cevap')
+            try:
+                result = response.json()
+                print(f"Received successful response from API: {result}")
+                return result.get('cevap')
+            except json.JSONDecodeError as e:
+                print(f"JSON decoding failed: {e}")
+                print(f"Response content that failed to decode: {response.content}")
+                return None
+        elif response.status_code == 400:
+            print(f"400 Error - Bad Request. Check API parameters.")
+            print(f"Response content: {response.text}")
         else:
             print(f"API request failed with status code: {response.status_code}")
             print(f"Response text: {response.text}")
-            return None
+
+        return None
+
     except requests.exceptions.RequestException as e:
         print(f"RequestException encountered: {e}")
-        return None
-    except json.JSONDecodeError as e:
-        print(f"JSON decoding failed: {e}")
-        print(f"Response content that failed to decode: {response.content}")
         return None
     except Exception as e:
         print(f"Unexpected error querying API: {e}")
         return None
-
 def should_store_question(question):
     keywords = ["which", "who", "when", "how", "explain", "define"]
     return any(keyword in question.lower() for keyword in keywords)
@@ -264,29 +275,43 @@ def main_page():
 }</pre>
 
             <h3>2. /docs (GET)</h3>
-            <p><strong>Description:</strong> Provides JSON documentation for all API endpoints, useful for developers to integrate with the API.</p>
-            <p><strong>Response (JSON):</strong> Detailed information about the API's available endpoints.</p>
-
-            <h2>Plugins</h2>
-            <p>The API supports two plugins:</p>
-            <ul>
-                <li><strong>history</strong>: Enables conversation history. If set to true, the chatbot remembers past interactions.</li>
-                <li><strong>emotion</strong>: Enables emotion detection. If set to true, the chatbot will respond based on the detected emotion of the user.</li>
-            </ul>
-
-            <h2>Handling Errors</h2>
-            <p>If a required field is missing in the request, or if an error occurs during processing, the API will return an appropriate error message in JSON format.</p>
-            <p><strong>Example error response (JSON):</strong></p>
+            <p><strong>Description:</strong> Provides JSON documentation for all API endpoints, including expected request and response formats, available parameters, and error messages.</p>
+            <p><strong>Response (JSON):</strong></p>
             <pre>{
-    "error": "No 'message' provided in JSON payload."
+    "endpoints": [
+        {
+            "path": "/chat",
+            "method": "POST",
+            "description": "Processes a user message with optional emotion and history features.",
+            "parameters": {
+                "message": "string",
+                "plugins": {
+                    "history": "boolean",
+                    "emotion": "boolean"
+                }
+            },
+            "response": {
+                "emotion_response": "string (optional)",
+                "bot_response": "string"
+            },
+            "error_responses": [
+                {
+                    "code": 400,
+                    "message": "No data provided. Please send a JSON payload with 'message'."
+                }
+            ]
+        }
+    ]
 }</pre>
 
-            <footer>
-                <p>&copy; 2024 Rexeloft LLC</p>
-            </footer>
+            <h2>How to Use</h2>
+            <ul>
+                <li><strong>To send a message:</strong> Use the <code>/chat</code> endpoint with a JSON payload containing a <code>message</code>.</li>
+                <li><strong>Optional plugins:</strong> You can enable <code>history</code> to retain the conversation history and <code>emotion</code> for emotion detection.</li>
+            </ul>
+            <p>For any other questions or if you need further support, feel free to contact us at <strong>support@rexeloft.com</strong>.</p>
         </body>
     </html>
     """
-    
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
