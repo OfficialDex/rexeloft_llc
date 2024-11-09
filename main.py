@@ -5,7 +5,6 @@ from webdriver_manager.chrome import ChromeDriverManager
 from flask import Flask, request, jsonify
 import json
 import re
-import requests
 import time
 from googletrans import Translator
 from fuzzywuzzy import fuzz
@@ -16,8 +15,6 @@ from functools import lru_cache
 from difflib import SequenceMatcher
 import random
 import nltk
-import os
-from requests_html import HTMLSession
 
 nltk.download('wordnet')
 nltk.download('averaged_perceptron_tagger')
@@ -140,20 +137,14 @@ def respond_based_on_emotion(emotion):
 
 def query_external_api(question):
     driver = create_headless_browser()
-
     try:
         driver.get(api_url)
-
         input_element = driver.find_element("name", "soru")
         input_element.send_keys(question)
-
         submit_button = driver.find_element("xpath", '//button[@type="submit"]')
         submit_button.click()
-
         time.sleep(3)
-
         result = driver.find_element("xpath", '//div[@class="response"]').text
-
         return result
     except Exception as e:
         return None
@@ -167,11 +158,7 @@ def should_store_question(question):
 def answer_question(question):
     normalized_question = normalize_and_lemmatize(replace_synonyms(question))
     similar_question = get_most_similar_question(normalized_question)
-
-    if similar_question:
-        return dataset[similar_question]
-    else:
-        return None
+    return dataset[similar_question] if similar_question else None
 
 def chatbot_response(user_input, use_history, use_emotion):
     global conversation_history
@@ -221,8 +208,8 @@ def chat():
 
     response = chatbot_response(user_input, use_history, use_emotion)
     return jsonify({
-        "response": response,
-        "emotion": emotion_response
+        "bot_response": response,
+        "emotion_response": emotion_response
     })
 
 @app.route('/')
@@ -306,4 +293,4 @@ def main_page():
    """
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
