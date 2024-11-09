@@ -1,7 +1,12 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 from flask import Flask, request, jsonify
 import json
 import re
 import requests
+import time
 from googletrans import Translator
 from fuzzywuzzy import fuzz
 from nltk.stem import WordNetLemmatizer
@@ -38,6 +43,14 @@ emotion_responses = {
 api_url = "https://tilki.dev/api/hercai"
 conversation_history = []
 stemmer = PorterStemmer()
+
+def create_headless_browser():
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    return driver
 
 def trim_conversation_history():
     global conversation_history
@@ -125,50 +138,28 @@ def detect_emotion(text):
 def respond_based_on_emotion(emotion):
     return random.choice(emotion_responses[emotion])
 
-# Updated function to use requests-html with a User-Agent header
 def query_external_api(question):
-    session = HTMLSession()
-
-    # User-Agent header
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0 Safari/537.36'
-    }
+    driver = create_headless_browser()
 
     try:
-        params = {'soru': question}
-        print(f"Querying external API with URL: {api_url} and parameters: {params}")
+        driver.get(api_url)
 
-        # Send the GET request with headers and parameters
-        response = session.get(api_url, headers=headers, params=params)
+        input_element = driver.find_element("name", "soru")
+        input_element.send_keys(question)
 
-        # Render the page to handle JavaScript and store cookies
-        response.html.render(timeout=10)
+        submit_button = driver.find_element("xpath", '//button[@type="submit"]')
+        submit_button.click()
 
-        # Debugging based on response status code
-        if response.status_code == 200:
-            try:
-                result = response.json()
-                print(f"Received successful response from API: {result}")
-                return result.get('cevap')
-            except json.JSONDecodeError as e:
-                print(f"JSON decoding failed: {e}")
-                print(f"Response content that failed to decode: {response.content}")
-                return None
-        elif response.status_code == 400:
-            print(f"400 Error - Bad Request. Check API parameters.")
-            print(f"Response content: {response.text}")
-        else:
-            print(f"API request failed with status code: {response.status_code}")
-            print(f"Response text: {response.text}")
+        time.sleep(3)
 
-        return None
+        result = driver.find_element("xpath", '//div[@class="response"]').text
 
-    except requests.exceptions.RequestException as e:
-        print(f"RequestException encountered: {e}")
-        return None
+        return result
     except Exception as e:
-        print(f"Unexpected error querying API: {e}")
         return None
+    finally:
+        driver.quit()
+
 def should_store_question(question):
     keywords = ["which", "who", "when", "how", "explain", "define"]
     return any(keyword in question.lower() for keyword in keywords)
@@ -230,8 +221,8 @@ def chat():
 
     response = chatbot_response(user_input, use_history, use_emotion)
     return jsonify({
-        "emotion_response": emotion_response if use_emotion else None,
-        "bot_response": response
+        "response": response,
+        "emotion": emotion_response
     })
 
 @app.route('/')
@@ -312,6 +303,7 @@ def main_page():
             <p>For any other questions or if you need further support, feel free to contact us at <strong>support@rexeloft.com</strong>.</p>
         </body>
     </html>
-    """
+   """
+
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    app.run(host="0.0.0.0", port=5000)
