@@ -1,3 +1,4 @@
 rexeloft-llc
 Flask
-requests_html
+requests-html
+lxml[html_clean]
