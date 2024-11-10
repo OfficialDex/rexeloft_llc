@@ -49,12 +49,10 @@ def create_headless_browser():
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
     options.add_argument("--remote-debugging-port=9222")
-    options.binary_location = "/usr/bin/google-chrome"
+    options.binary_location = "/usr/bin/google-chrome"  # Chrome binary location
 
-    try:
-        driver = webdriver.Chrome(service=Service("/usr/local/bin/chromedriver"), options=options)
-    except Exception:
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    # Use ChromeDriverManager to automatically download and manage the ChromeDriver
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     return driver
 
 
