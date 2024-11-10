@@ -15,6 +15,7 @@ from functools import lru_cache
 from difflib import SequenceMatcher
 import random
 import nltk
+import os
 
 nltk.download('wordnet')
 nltk.download('averaged_perceptron_tagger')
