@@ -1,6 +1,1 @@
-rexeloft-llc
-Flask
-requests-html
-lxml[html_clean]
-selenium
-webdriver-manager
+flask
