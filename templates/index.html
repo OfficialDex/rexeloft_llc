@@ -23,6 +23,7 @@
       padding: 20px;
       box-sizing: border-box;
       text-align: center;
+      position: relative;
     }
 
     .txt {
@@ -82,6 +83,23 @@
       padding: 20px;
       box-sizing: border-box;
     }
+
+    .discord {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 40px;
+    }
+
+    .discord img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 0 5px #7289da);
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -89,6 +107,9 @@
     <div class="txt">F</div>
     <div class="fact" id="fact"></div>
     <div class="bar"><div class="rod"></div></div>
+    <a class="discord" href="https://discord.gg/your-server-invite" target="_blank">
+      <img src="https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/discord.svg" alt="Discord">
+    </a>
   </div>
   <div class="next" id="dummy">
     Welcome to the software page.
@@ -96,11 +117,11 @@
 
   <script>
     let facts = [
-      "Honey never spoils.",
-      "Bananas are berries, but strawberries aren't.",
-      "Octopuses have three hearts.",
-      "A day on Venus is longer than a year there.",
-      "There are more stars in the universe than grains of sand on Earth."
+      "Did you know? Our old name used to be chrono.",
+      "Did you know? Most of our developers are teen!",
+      "Did you know? The first ever Roblox Executor name was Silent Cowz Pro 10.",
+      "Did you know? Roblox lua is known as Luau.",
+      "Did you know? Most developer in our team are old exploit devs or retired."
     ];
     let idx = Math.floor(Math.random() * facts.length);
     document.addEventListener('DOMContentLoaded', () => {
