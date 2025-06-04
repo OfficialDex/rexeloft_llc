@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>F</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Black+Rose&display=swap" rel="stylesheet">
   <style>
     body {
@@ -18,18 +19,28 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
+      padding: 20px;
+      box-sizing: border-box;
+      text-align: center;
     }
 
     .txt {
-      font-size: 120px;
+      font-size: 15vw;
+    }
+
+    .fact {
+      font-size: 4vw;
+      margin: 20px 0;
+      color: #ccc;
     }
 
     .bar {
-      width: 300px;
+      width: 80vw;
+      max-width: 300px;
       height: 10px;
       background: #dbeaff;
       overflow: hidden;
-      margin-top: 20px;
+      margin-top: 10px;
       border-radius: 5px;
       position: relative;
     }
@@ -64,13 +75,17 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      font-size: 40px;
+      font-size: 5vw;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
     }
   </style>
 </head>
 <body>
   <div class="wrap" id="load">
     <div class="txt">F</div>
+    <div class="fact">Loading... Did you know Discord was almost called Wyvern?</div>
     <div class="bar"><div class="rod"></div></div>
   </div>
   <div class="next" id="dummy">
