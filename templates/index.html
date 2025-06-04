@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>F</title>
+  <link href="https://fonts.googleapis.com/css2?family=Black+Rose&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      font-family: 'Black Rose', cursive;
+      overflow: hidden;
+      color: white;
+    }
+
+    .wrap {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .txt {
+      font-size: 120px;
+    }
+
+    .bar {
+      width: 300px;
+      height: 10px;
+      background: #dbeaff;
+      overflow: hidden;
+      margin-top: 20px;
+      border-radius: 5px;
+      position: relative;
+    }
+
+    .rod {
+      width: 60px;
+      height: 100%;
+      background: #0007ff;
+      position: absolute;
+      left: -60px;
+      animation: move 1s linear infinite;
+    }
+
+    @keyframes move {
+      0% { left: -60px; }
+      100% { left: 300px; }
+    }
+
+    .fade {
+      animation: fadeout 1s forwards;
+    }
+
+    @keyframes fadeout {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    .next {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-size: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap" id="load">
+    <div class="txt">F</div>
+    <div class="bar"><div class="rod"></div></div>
+  </div>
+  <div class="next" id="dummy">
+    Welcome to the software page.
+  </div>
+
+  <script>
+    setTimeout(() => {
+      let load = document.getElementById('load')
+      let dummy = document.getElementById('dummy')
+      load.classList.add('fade')
+      setTimeout(() => {
+        load.style.display = 'none'
+        dummy.style.display = 'flex'
+      }, 1000)
+    }, 3000)
+  </script>
+</body>
+</html>
