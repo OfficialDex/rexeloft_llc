@@ -4,6 +4,7 @@
   <title>F</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Black+Rose&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light+Two&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -32,6 +33,7 @@
       font-size: 4vw;
       margin: 20px 0;
       color: #ccc;
+      font-family: 'Shadows Into Light Two', cursive;
     }
 
     .bar {
@@ -40,23 +42,23 @@
       height: 10px;
       background: #dbeaff;
       overflow: hidden;
-      margin-top: 10px;
       border-radius: 5px;
       position: relative;
     }
 
     .rod {
-      width: 60px;
+      width: 20%;
+      min-width: 60px;
       height: 100%;
       background: #0007ff;
       position: absolute;
-      left: -60px;
+      left: -20%;
       animation: move 1s linear infinite;
     }
 
     @keyframes move {
-      0% { left: -60px; }
-      100% { left: 300px; }
+      0% { left: -20%; }
+      100% { left: 100%; }
     }
 
     .fade {
@@ -85,7 +87,7 @@
 <body>
   <div class="wrap" id="load">
     <div class="txt">F</div>
-    <div class="fact">Loading... Did you know Discord was almost called Wyvern?</div>
+    <div class="fact" id="fact"></div>
     <div class="bar"><div class="rod"></div></div>
   </div>
   <div class="next" id="dummy">
@@ -93,15 +95,28 @@
   </div>
 
   <script>
+    let facts = [
+      "Honey never spoils.",
+      "Bananas are berries, but strawberries aren't.",
+      "Octopuses have three hearts.",
+      "A day on Venus is longer than a year there.",
+      "There are more stars in the universe than grains of sand on Earth."
+    ];
+    let idx = Math.floor(Math.random() * facts.length);
+    document.addEventListener('DOMContentLoaded', () => {
+      let factEl = document.getElementById('fact');
+      factEl.textContent = facts[idx];
+    });
+
     setTimeout(() => {
-      let load = document.getElementById('load')
-      let dummy = document.getElementById('dummy')
-      load.classList.add('fade')
+      let load = document.getElementById('load');
+      let dummy = document.getElementById('dummy');
+      load.classList.add('fade');
       setTimeout(() => {
-        load.style.display = 'none'
-        dummy.style.display = 'flex'
-      }, 1000)
-    }, 3000)
+        load.style.display = 'none';
+        dummy.style.display = 'flex';
+      }, 1000);
+    }, 5500);
   </script>
 </body>
 </html>
