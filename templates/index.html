@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>F</title>
+  <title>Falcon Executor</n>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Black+Rose&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light+Two&display=swap" rel="stylesheet">
@@ -13,6 +13,7 @@
       overflow: hidden;
       color: white;
     }
+
     .wrap {
       height: 100vh;
       display: flex;
@@ -24,18 +25,21 @@
       text-align: center;
       position: relative;
     }
+
     .logo-img {
       width: 25vw;
       max-width: 200px;
       height: auto;
       margin-bottom: 20px;
     }
+
     .fact {
       font-size: 4vw;
       margin: 20px 0;
       color: #ccc;
       font-family: 'Shadows Into Light Two', cursive;
     }
+
     .bar {
       width: 80vw;
       max-width: 300px;
@@ -45,6 +49,7 @@
       border-radius: 5px;
       position: relative;
     }
+
     .rod {
       width: 20%;
       min-width: 60px;
@@ -54,24 +59,54 @@
       left: -20%;
       animation: move 1s linear infinite;
     }
+
     @keyframes move {
       0% { left: -20%; }
       100% { left: 100%; }
     }
+
     .fade {
       animation: fadeout 1s forwards;
     }
+
     @keyframes fadeout {
       to {
         opacity: 0;
         visibility: hidden;
       }
     }
-    .content-container {
+
+    .next {
       display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
       height: 100vh;
-      overflow-y: auto;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+      background: black;
     }
+
+    .title {
+      font-size: 10vw;
+      margin-bottom: 30px;
+      color: white;
+    }
+
+    .btn {
+      padding: 15px 40px;
+      background: black;
+      border: 2px solid;
+      border-image: linear-gradient(to right, #1711c9, #1711c9) 1;
+      border-radius: 50px;
+      font-size: 5vw;
+      color: white;
+      cursor: pointer;
+      text-decoration: none;
+      font-family: 'Shadows Into Light Two', cursive;
+    }
+
     .discord {
       position: absolute;
       bottom: 20px;
@@ -80,6 +115,7 @@
       width: 40px;
       height: 40px;
     }
+
     .discord img {
       width: 100%;
       height: 100%;
@@ -90,7 +126,7 @@
   </style>
 </head>
 <body>
-  <div class="wrap" id="loader">
+  <div class="wrap" id="load">
     <img class="logo-img" src="https://cdn.discordapp.com/attachments/1364298828899160146/1379698549041926144/Picsart_25-06-04_11-16-26-948.png?ex=6841d8a7&is=68408727&hm=7c99356cae6b0a7912797204ca4fc3ad04fdfb8c602544b2060f8409a39d2582&" alt="Logo">
     <div class="fact" id="fact"></div>
     <div class="bar"><div class="rod"></div></div>
@@ -98,8 +134,13 @@
       <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord Logo">
     </a>
   </div>
-
-  <div class="content-container" id="home"></div>
+  <div class="next" id="home">
+    <div class="title">Falcon Executor</div>
+    <a class="btn" href="#">soon</a>
+    <a class="discord" href="https://discord.gg/your-server-invite" target="_blank">
+      <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord Logo">
+    </a>
+  </div>
 
   <script>
     let facts = [
@@ -114,23 +155,21 @@
       "Did you know? Synapse x was released in 2016 and was shut down in 2023, it ran for 7 years!!",
       "Did you know? Synapse x was created by Louka"
     ];
-    document.getElementById('fact').textContent = facts[Math.floor(Math.random() * facts.length)];
+    let idx = Math.floor(Math.random() * facts.length);
+    document.addEventListener('DOMContentLoaded', () => {
+      let factEl = document.getElementById('fact');
+      factEl.textContent = facts[idx];
+    });
 
     setTimeout(() => {
-      const loader = document.getElementById('loader');
-      loader.classList.add('fade');
-
-      fetch("home.html")
-        .then(response => response.text())
-        .then(html => {
-          document.getElementById('postload').innerHTML = html;
-          document.getElementById('postload').style.display = 'block';
-        });
-
+      let load = document.getElementById('load');
+      let home = document.getElementById('home');
+      load.classList.add('fade');
       setTimeout(() => {
-        loader.style.display = 'none';
+        load.style.display = 'none';
+        home.style.display = 'flex';
       }, 1000);
     }, 5500);
   </script>
 </body>
-  </html>
+</html>
