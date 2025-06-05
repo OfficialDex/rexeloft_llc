@@ -13,7 +13,6 @@
       overflow: hidden;
       color: white;
     }
-
     .wrap {
       height: 100vh;
       display: flex;
@@ -25,21 +24,18 @@
       text-align: center;
       position: relative;
     }
-
     .logo-img {
       width: 25vw;
       max-width: 200px;
       height: auto;
       margin-bottom: 20px;
     }
-
     .fact {
       font-size: 4vw;
       margin: 20px 0;
       color: #ccc;
       font-family: 'Shadows Into Light Two', cursive;
     }
-
     .bar {
       width: 80vw;
       max-width: 300px;
@@ -49,7 +45,6 @@
       border-radius: 5px;
       position: relative;
     }
-
     .rod {
       width: 20%;
       min-width: 60px;
@@ -59,34 +54,24 @@
       left: -20%;
       animation: move 1s linear infinite;
     }
-
     @keyframes move {
       0% { left: -20%; }
       100% { left: 100%; }
     }
-
     .fade {
       animation: fadeout 1s forwards;
     }
-
     @keyframes fadeout {
       to {
         opacity: 0;
         visibility: hidden;
       }
     }
-
-    .next {
+    .content-container {
       display: none;
-      justify-content: center;
-      align-items: center;
       height: 100vh;
-      font-size: 5vw;
-      text-align: center;
-      padding: 20px;
-      box-sizing: border-box;
+      overflow-y: auto;
     }
-
     .discord {
       position: absolute;
       bottom: 20px;
@@ -94,33 +79,27 @@
       transform: translateX(-50%);
       width: 40px;
       height: 40px;
-      cursor: pointer;
     }
-
     .discord img {
       width: 100%;
       height: 100%;
       object-fit: contain;
+      cursor: pointer;
       filter: drop-shadow(0 0 8px #7289da);
     }
   </style>
 </head>
 <body>
-  <div class="wrap" id="load">
+  <div class="wrap" id="loader">
     <img class="logo-img" src="https://cdn.discordapp.com/attachments/1364298828899160146/1379698549041926144/Picsart_25-06-04_11-16-26-948.png?ex=6841d8a7&is=68408727&hm=7c99356cae6b0a7912797204ca4fc3ad04fdfb8c602544b2060f8409a39d2582&" alt="Logo">
     <div class="fact" id="fact"></div>
     <div class="bar"><div class="rod"></div></div>
-    <div class="discord" onclick="playPing()">
+    <a class="discord" href="https://discord.gg/getfalcon" target="_blank">
       <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord Logo">
-    </div>
+    </a>
   </div>
 
-  <div class="next" id="dummy">
-    soon..
-  </div>
-
-  
-  <audio id="ping" src="https://cdn.discordapp.com/attachments/869227301798068294/1137807761447700511/discord_ping.mp3"></audio>
+  <div class="content-container" id="home"></div>
 
   <script>
     let facts = [
@@ -135,30 +114,23 @@
       "Did you know? Synapse x was released in 2016 and was shut down in 2023, it ran for 7 years!!",
       "Did you know? Synapse x was created by Louka"
     ];
-    let idx = Math.floor(Math.random() * facts.length);
-    document.addEventListener('DOMContentLoaded', () => {
-      let factEl = document.getElementById('fact');
-      factEl.textContent = facts[idx];
-    });
+    document.getElementById('fact').textContent = facts[Math.floor(Math.random() * facts.length)];
 
     setTimeout(() => {
-      let load = document.getElementById('load');
-      let dummy = document.getElementById('dummy');
-      load.classList.add('fade');
+      const loader = document.getElementById('loader');
+      loader.classList.add('fade');
+
+      fetch("home.html")
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('home').innerHTML = html;
+          document.getElementById('home').style.display = 'block';
+        });
+
       setTimeout(() => {
-        load.style.display = 'none';
-        dummy.style.display = 'flex';
+        loader.style.display = 'none';
       }, 1000);
     }, 5500);
-
-    function playPing() {
-      const audio = document.getElementById('ping');
-      audio.currentTime = 0;
-      audio.play();
-      setTimeout(() => {
-        window.open("https://discord.gg/getfalcon", "_blank");
-      }, 300); 
-    }
   </script>
 </body>
-</html>
+  </html>
