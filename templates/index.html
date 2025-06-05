@@ -135,13 +135,12 @@
     </a>
   </div>
   <div class="next" id="home">
-    <div class="title">Falcon Executor</div>
+    <div class="title" id="typebox"></div>
     <a class="btn" href="#">soon</a>
-    <a class="discord" href="https://discord.gg/getfalcon" target="_blank">
+    <a class="discord" href="https://discord.gg/your-server-invite" target="_blank">
       <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord Logo">
     </a>
   </div>
-
   <script>
     let facts = [
       "Did you know? Our old name used to be chrono.",
@@ -170,6 +169,37 @@
         home.style.display = 'flex';
       }, 1000);
     }, 5500);
+
+    let phrases = ["Falcon Executor", "Safest Executor", "PC Executor"];
+    let typebox = document.getElementById('typebox');
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let typing = true;
+
+    function typeEffect() {
+      if (typing) {
+        if (charIndex < phrases[phraseIndex].length) {
+          typebox.textContent += phrases[phraseIndex][charIndex];
+          charIndex++;
+          setTimeout(typeEffect, 100);
+        } else {
+          typing = false;
+          setTimeout(typeEffect, 1500);
+        }
+      } else {
+        if (charIndex > 0) {
+          typebox.textContent = phrases[phraseIndex].slice(0, charIndex - 1);
+          charIndex--;
+          setTimeout(typeEffect, 50);
+        } else {
+          typing = true;
+          phraseIndex = (phraseIndex + 1) % phrases.length;
+          setTimeout(typeEffect, 200);
+        }
+      }
+    }
+
+    setTimeout(typeEffect, 6500);
   </script>
 </body>
 </html>
