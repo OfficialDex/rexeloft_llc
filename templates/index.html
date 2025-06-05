@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>F</title>
+  <title>Falcon Executor</n>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Black+Rose&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light+Two&display=swap" rel="stylesheet">
@@ -80,11 +80,31 @@
       display: none;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
       height: 100vh;
-      font-size: 5vw;
       text-align: center;
       padding: 20px;
       box-sizing: border-box;
+      background: black;
+    }
+
+    .title {
+      font-size: 10vw;
+      margin-bottom: 30px;
+      color: white;
+    }
+
+    .btn {
+      padding: 15px 40px;
+      background: black;
+      border: 2px solid;
+      border-image: linear-gradient(to right, #1711c9, #1711c9) 1;
+      border-radius: 50px;
+      font-size: 5vw;
+      color: white;
+      cursor: pointer;
+      text-decoration: none;
+      font-family: 'Shadows Into Light Two', cursive;
     }
 
     .discord {
@@ -107,15 +127,19 @@
 </head>
 <body>
   <div class="wrap" id="load">
-    <img class="logo-img" src="https://cdn.discordapp.com/attachments/1364298828899160146/1379698549041926144/Picsart_25-06-04_11-16-26-948.png?ex=68412fe7&is=683fde67&hm=7bbfa42e9a10a8f5d8db9619871fcc4f4f63a4ac773c0991038a64acbdc9364d&" alt="Logo">
+    <img class="logo-img" src="https://cdn.discordapp.com/attachments/1364298828899160146/1379698549041926144/Picsart_25-06-04_11-16-26-948.png?ex=68428167&is=68412fe7&hm=7ff05722edf153fb6817e27e862f2477f28199ba910828bb40237eed3becf2af&" alt="Logo">
     <div class="fact" id="fact"></div>
     <div class="bar"><div class="rod"></div></div>
     <a class="discord" href="https://discord.gg/getfalcon" target="_blank">
       <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord Logo">
     </a>
   </div>
-  <div class="next" id="dummy">
-    soon..
+  <div class="next" id="home">
+    <div class="title">Falcon Executor</div>
+    <a class="btn" href="#">soon</a>
+    <a class="discord" href="https://discord.gg/getfalcon" target="_blank">
+      <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord Logo">
+    </a>
   </div>
 
   <script>
@@ -139,13 +163,13 @@
 
     setTimeout(() => {
       let load = document.getElementById('load');
-      let dummy = document.getElementById('dummy');
+      let home = document.getElementById('home');
       load.classList.add('fade');
       setTimeout(() => {
         load.style.display = 'none';
-        dummy.style.display = 'flex';
+        home.style.display = 'flex';
       }, 1000);
     }, 5500);
   </script>
 </body>
-  </html>
+</html>
