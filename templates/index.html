@@ -123,8 +123,8 @@
       fetch("home.html")
         .then(response => response.text())
         .then(html => {
-          document.getElementById('home').innerHTML = html;
-          document.getElementById('home').style.display = 'block';
+          document.getElementById('postload').innerHTML = html;
+          document.getElementById('postload').style.display = 'block';
         });
 
       setTimeout(() => {
