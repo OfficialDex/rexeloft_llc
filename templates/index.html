@@ -94,37 +94,46 @@
       transform: translateX(-50%);
       width: 40px;
       height: 40px;
+      cursor: pointer;
     }
 
     .discord img {
       width: 100%;
       height: 100%;
       object-fit: contain;
-      cursor: pointer;
       filter: drop-shadow(0 0 8px #7289da);
     }
   </style>
 </head>
 <body>
   <div class="wrap" id="load">
-    <img class="logo-img" src="https://cdn.discordapp.com/attachments/1364298828899160146/1379698549041926144/Picsart_25-06-04_11-16-26-948.png?ex=68412fe7&is=683fde67&hm=7bbfa42e9a10a8f5d8db9619871fcc4f4f63a4ac773c0991038a64acbdc9364d&" alt="Logo">
+    <img class="logo-img" src="https://cdn.discordapp.com/attachments/1364298828899160146/1379698549041926144/Picsart_25-06-04_11-16-26-948.png?ex=6841d8a7&is=68408727&hm=7c99356cae6b0a7912797204ca4fc3ad04fdfb8c602544b2060f8409a39d2582&" alt="Logo">
     <div class="fact" id="fact"></div>
     <div class="bar"><div class="rod"></div></div>
-    <a class="discord" href="https://discord.gg/getfalcon" target="_blank">
+    <div class="discord" onclick="playPing()">
       <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord Logo">
-    </a>
+    </div>
   </div>
+
   <div class="next" id="dummy">
     soon..
   </div>
 
+  
+  <audio id="ping" src="https://cdn.discordapp.com/attachments/869227301798068294/1137807761447700511/discord_ping.mp3"></audio>
+
   <script>
     let facts = [
       "Did you know? Our old name used to be chrono.",
-      "Did you know? Most of our developers are teen!",
+      "Did you know? Joining our discord server will give you access to talk with our customer support.",
       "Did you know? The first ever Roblox Executor name was Silent Cowz Pro 10.",
-      "Did you know? Roblox lua is known as Luau.",
-      "Did you know? Most developer in our team are old exploit devs or retired."
+      "Did you know? Roblox Lua is known as LuaU.",
+      "Did you know? Most developer in our team are old exploit devs or retired.",
+      "Did you know? There are more ratted Pc executors than actual, be careful",
+      "Did you know? Moonsec obfuscation is no longer powerful and can be decompiled now",
+      "Did you know? First roblox exploiters was roblox's own admins",
+      "Did you know? Synapse x was released in 2016 and was shut down in 2023, it ran for 7 years!!",
+      "Did you know? Synapse x was created by Louka"
     ];
     let idx = Math.floor(Math.random() * facts.length);
     document.addEventListener('DOMContentLoaded', () => {
@@ -141,6 +150,15 @@
         dummy.style.display = 'flex';
       }, 1000);
     }, 5500);
+
+    function playPing() {
+      const audio = document.getElementById('ping');
+      audio.currentTime = 0;
+      audio.play();
+      setTimeout(() => {
+        window.open("https://discord.gg/getfalcon", "_blank");
+      }, 300); 
+    }
   </script>
 </body>
 </html>
