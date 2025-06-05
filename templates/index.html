@@ -3,8 +3,7 @@
 <head>
   <title>Falcon Executor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Black+Rose&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light+Two&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Black+Rose&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -12,6 +11,27 @@
       font-family: 'Black Rose', cursive;
       overflow: hidden;
       color: white;
+      position: relative;
+    }
+
+    .corner-glow::before,
+    .corner-glow::after {
+      content: "";
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle at center, #007bff88 0%, transparent 80%);
+      z-index: 0;
+    }
+
+    .corner-glow::before {
+      top: 0;
+      left: 0;
+    }
+
+    .corner-glow::after {
+      bottom: 0;
+      right: 0;
     }
 
     .wrap {
@@ -24,6 +44,7 @@
       box-sizing: border-box;
       text-align: center;
       position: relative;
+      z-index: 1;
     }
 
     .logo-img {
@@ -31,13 +52,17 @@
       max-width: 200px;
       height: auto;
       margin-bottom: 20px;
+      transition: opacity 1s ease, transform 1s ease;
     }
 
     .fact {
       font-size: 4vw;
       margin: 20px 0;
       color: #ccc;
-      font-family: 'Shadows Into Light Two', cursive;
+      font-family: 'Raleway', sans-serif;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease, transform 1s ease;
     }
 
     .bar {
@@ -86,25 +111,34 @@
       padding: 20px;
       box-sizing: border-box;
       background: black;
+      position: relative;
     }
 
     .title {
       font-size: 10vw;
       margin-bottom: 30px;
-      color: white;
+      font-family: 'Raleway', sans-serif;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 1.2s ease, transform 1.2s ease;
     }
 
     .btn {
-      padding: 15px 40px;
-      background: black;
-      border: 2px solid;
-      border-image: linear-gradient(to right, #1711c9, #1711c9) 1;
-      border-radius: 50px;
+      padding: 15px 50px;
+      background: linear-gradient(to right, #0d1b2a, #1b263b);
+      border: none;
+      border-radius: 999px;
       font-size: 5vw;
       color: white;
       cursor: pointer;
-      text-decoration: none;
-      font-family: 'Shadows Into Light Two', cursive;
+      font-family: 'Raleway', sans-serif;
+      margin-top: 20px;
+      box-shadow: 0 0 10px #007bff66;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
     }
 
     .discord {
@@ -123,17 +157,32 @@
       cursor: pointer;
       filter: drop-shadow(0 0 8px #7289da);
     }
+
+    .highlight {
+      background: linear-gradient(to right, #a855f7, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: bold;
+    }
+
+    .highlight2 {
+      background: linear-gradient(to right, #ef4444, #be123c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: bold;
+    }
   </style>
 </head>
-<body>
+<body class="corner-glow">
   <div class="wrap" id="load">
     <img class="logo-img" src="https://cdn.discordapp.com/attachments/1364298828899160146/1379698549041926144/Picsart_25-06-04_11-16-26-948.png?ex=68428167&is=68412fe7&hm=7ff05722edf153fb6817e27e862f2477f28199ba910828bb40237eed3becf2af&" alt="Logo">
     <div class="fact" id="fact"></div>
     <div class="bar"><div class="rod"></div></div>
-    <a class="discord" href="https://discord.gg/getfalcon" target="_blank">
+    <a class="discord" href="https://discord.gg/your-server-invite" target="_blank">
       <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord Logo">
     </a>
   </div>
+
   <div class="next" id="home">
     <div class="title" id="typebox"></div>
     <a class="btn" href="#">soon</a>
@@ -141,6 +190,7 @@
       <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord Logo">
     </a>
   </div>
+
   <script>
     let facts = [
       "Did you know? Our old name used to be chrono.",
@@ -158,6 +208,10 @@
     document.addEventListener('DOMContentLoaded', () => {
       let factEl = document.getElementById('fact');
       factEl.textContent = facts[idx];
+      setTimeout(() => {
+        factEl.style.opacity = "1";
+        factEl.style.transform = "translateY(0)";
+      }, 500);
     });
 
     setTimeout(() => {
@@ -167,30 +221,39 @@
       setTimeout(() => {
         load.style.display = 'none';
         home.style.display = 'flex';
+        document.getElementById("typebox").style.opacity = "1";
+        document.getElementById("typebox").style.transform = "scale(1)";
       }, 1000);
     }, 5500);
 
-    let phrases = ["Falcon Executor", "Safest Executor", "PC Executor"];
+    let phrases = [
+      "Welcome to <span class='highlight'>Falcon Executor</span>",
+      "The <span class='highlight2'>Safest</span> Script Hub",
+      "Your <span class='highlight'>#1</span> <span class='highlight2'>PC Executor</span>"
+    ];
     let typebox = document.getElementById('typebox');
     let phraseIndex = 0;
     let charIndex = 0;
     let typing = true;
+    let isTag = false;
 
     function typeEffect() {
+      let phrase = phrases[phraseIndex];
+      let plain = phrase.replace(/<[^>]*>/g, '');
       if (typing) {
-        if (charIndex < phrases[phraseIndex].length) {
-          typebox.textContent += phrases[phraseIndex][charIndex];
+        if (charIndex <= plain.length) {
+          typebox.innerHTML = phrase.slice(0, phrase.indexOf(plain[charIndex]) + 1 + (phrase.match(/<[^>]*>/g) || []).join('').length);
           charIndex++;
-          setTimeout(typeEffect, 100);
+          setTimeout(typeEffect, 80);
         } else {
           typing = false;
           setTimeout(typeEffect, 1500);
         }
       } else {
         if (charIndex > 0) {
-          typebox.textContent = phrases[phraseIndex].slice(0, charIndex - 1);
+          typebox.innerHTML = phrase.slice(0, phrase.indexOf(plain[charIndex - 1]));
           charIndex--;
-          setTimeout(typeEffect, 50);
+          setTimeout(typeEffect, 40);
         } else {
           typing = true;
           phraseIndex = (phraseIndex + 1) % phrases.length;
