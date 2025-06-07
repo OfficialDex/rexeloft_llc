@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Official Falcon Executor</title>
+  <title>Falcon Executor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Black+Rose&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light+Two&display=swap" rel="stylesheet">
@@ -24,6 +24,7 @@
       box-sizing: border-box;
       text-align: center;
       position: relative;
+      animation: popSlideFade 1s ease-in-out forwards;
     }
 
     .logo-img {
@@ -31,6 +32,9 @@
       max-width: 200px;
       height: auto;
       margin-bottom: 20px;
+      opacity: 0;
+      transform: translateY(-20px) scale(0.9);
+      animation: fadeSlidePop 1s ease-out 0.3s forwards;
     }
 
     .fact {
@@ -38,6 +42,9 @@
       margin: 20px 0;
       color: #ccc;
       font-family: 'Shadows Into Light Two', cursive;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeInUp 0.8s ease-out 0.8s forwards;
     }
 
     .bar {
@@ -48,6 +55,7 @@
       overflow: hidden;
       border-radius: 5px;
       position: relative;
+      margin-top: 15px;
     }
 
     .rod {
@@ -86,12 +94,16 @@
       padding: 20px;
       box-sizing: border-box;
       background: black;
+      animation: fadeSlidePop 1s ease-in-out forwards;
     }
 
     .title {
       font-size: 10vw;
       margin-bottom: 30px;
       color: white;
+      opacity: 0;
+      transform: scale(0.9);
+      animation: fadeInScale 1s ease-out 0.3s forwards;
     }
 
     .btn {
@@ -105,6 +117,9 @@
       cursor: pointer;
       text-decoration: none;
       font-family: 'Shadows Into Light Two', cursive;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease-out 0.6s forwards;
     }
 
     .discord {
@@ -114,6 +129,8 @@
       transform: translateX(-50%);
       width: 40px;
       height: 40px;
+      opacity: 0;
+      animation: fadeIn 1s ease-out 1s forwards;
     }
 
     .discord img {
@@ -123,11 +140,36 @@
       cursor: pointer;
       filter: drop-shadow(0 0 8px #7289da);
     }
+
+    @keyframes popSlideFade {
+      from { opacity: 0; transform: translateY(30px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes fadeSlidePop {
+      from { opacity: 0; transform: translateY(30px) scale(0.9); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
   </style>
 </head>
 <body>
   <div class="wrap" id="load">
-    <img class="logo-img" src="https://cdn.discordapp.com/attachments/1364298828899160146/1379698549041926144/Picsart_25-06-04_11-16-26-948.png?ex=68452467&is=6843d2e7&hm=e62d041aafbc235f813454ed7cfb76c08c09f350c1be506a1b60b7e200645a66&" alt="Logo">
+    <img class="logo-img" src="https://cdn.discordapp.com/attachments/1364298828899160146/1379698549041926144/Picsart_25-06-04_11-16-26-948.png" alt="Logo">
     <div class="fact" id="fact"></div>
     <div class="bar"><div class="rod"></div></div>
     <a class="discord" href="https://discord.gg/getfalcon" target="_blank">
@@ -137,7 +179,7 @@
   <div class="next" id="home">
     <div class="title">Falcon Executor</div>
     <a class="btn" href="#">soon</a>
-    <a class="discord" href="https://discord.gg/your-server-invite" target="_blank">
+    <a class="discord" href="https://discord.gg/getfalcon" target="_blank">
       <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord Logo">
     </a>
   </div>
@@ -149,16 +191,15 @@
       "Did you know? The first ever Roblox Executor name was Silent Cowz Pro 10.",
       "Did you know? Roblox Lua is known as LuaU.",
       "Did you know? Most developer in our team are old exploit devs or retired.",
-      "Did you know? There are more ratted PC executors than actual ones, be careful.",
+      "Did you know? There are more ratted PC executors than actual, be careful.",
       "Did you know? Moonsec obfuscation is no longer powerful and can be decompiled now.",
       "Did you know? First Roblox exploiters were Roblox's own admins.",
-      "Did you know? Synapse X was released in 2016 and shut down in 2023 — ran for 7 years!",
+      "Did you know? Synapse X was released in 2016 and was shut down in 2023, it ran for 7 years!",
       "Did you know? Synapse X was created by Louka."
     ];
     let idx = Math.floor(Math.random() * facts.length);
     document.addEventListener('DOMContentLoaded', () => {
-      let factEl = document.getElementById('fact');
-      factEl.textContent = facts[idx];
+      document.getElementById('fact').textContent = facts[idx];
     });
 
     setTimeout(() => {
