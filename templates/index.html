@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Falcon Executor</title>
+  <title>Falcon</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Black+Rose&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light+Two&display=swap" rel="stylesheet">
@@ -24,6 +24,7 @@
       box-sizing: border-box;
       text-align: center;
       position: relative;
+      animation: fadeIn 1.5s ease-out;
     }
 
     .logo-img {
@@ -31,6 +32,7 @@
       max-width: 200px;
       height: auto;
       margin-bottom: 20px;
+      animation: popIn 1s ease-out;
     }
 
     .fact {
@@ -38,6 +40,7 @@
       margin: 20px 0;
       color: #ccc;
       font-family: 'Shadows Into Light Two', cursive;
+      animation: popIn 1.4s ease-out;
     }
 
     .bar {
@@ -86,12 +89,14 @@
       padding: 20px;
       box-sizing: border-box;
       background: black;
+      animation: fadeIn 1s ease-out;
     }
 
     .title {
       font-size: 10vw;
       margin-bottom: 30px;
       color: white;
+      animation: popIn 0.8s ease-out;
     }
 
     .btn {
@@ -105,6 +110,12 @@
       cursor: pointer;
       text-decoration: none;
       font-family: 'Shadows Into Light Two', cursive;
+      animation: popIn 1.2s ease-out;
+      transition: transform 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
     }
 
     .discord {
@@ -114,6 +125,7 @@
       transform: translateX(-50%);
       width: 40px;
       height: 40px;
+      animation: popIn 1.5s ease-out;
     }
 
     .discord img {
@@ -122,6 +134,21 @@
       object-fit: contain;
       cursor: pointer;
       filter: drop-shadow(0 0 8px #7289da);
+      transition: transform 0.3s ease;
+    }
+
+    .discord img:hover {
+      transform: scale(1.1);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.5); }
+      100% { opacity: 1; transform: scale(1); }
     }
   </style>
 </head>
@@ -172,4 +199,4 @@
     }, 5500);
   </script>
 </body>
-</html>
+      </html>
