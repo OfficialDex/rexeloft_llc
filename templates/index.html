@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<htmlg>
+<html>
 <head>
-  <title>Falcon Executor</title>
+  <title>Falcon Executor</n>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Black+Rose&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light+Two&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light+Two&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       background: black;
-      font-family: 'Raleway', sans-serif;
+      font-family: 'Black Rose', cursive;
       overflow: hidden;
       color: white;
     }
@@ -86,12 +86,6 @@
       padding: 20px;
       box-sizing: border-box;
       background: black;
-      opacity: 0;
-      animation: fadein 1.5s ease forwards;
-    }
-
-    @keyframes fadein {
-      to { opacity: 1; }
     }
 
     .title {
@@ -100,36 +94,17 @@
       color: white;
     }
 
-    .gradient1 {
-      background: linear-gradient(to right, purple, blue);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .gradient2 {
-      background: linear-gradient(to right, red, #ff4d88);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
     .btn {
       padding: 15px 40px;
-      background: #03071e;
+      background: black;
+      border: 2px solid;
+      border-image: linear-gradient(to right, #1711c9, #1711c9) 1;
       border-radius: 50px;
       font-size: 5vw;
       color: white;
       cursor: pointer;
       text-decoration: none;
       font-family: 'Shadows Into Light Two', cursive;
-      border: 2px solid transparent;
-      background-image: linear-gradient(to right, #0af, #0af), linear-gradient(to right, #0af, #0af);
-      background-origin: border-box;
-      background-clip: padding-box, border-box;
-      transition: transform 0.4s ease;
-    }
-
-    .btn:hover {
-      transform: scale(1.05);
     }
 
     .discord {
@@ -152,18 +127,15 @@
 </head>
 <body>
   <div class="wrap" id="load">
-    <img class="logo-img" src="https://media.discordapp.net/attachments/1268581885966155817/1273970010569838615/IMG_1090.png?ex=6840d9c7&is=683f8847&hm=015d83af73124da4691cf8681bfb07791d145f15fc50dd2732ec2d63a7c8eb12&" alt="Logo">
+    <img class="logo-img" src="https://cdn.discordapp.com/attachments/1364298828899160146/1379698549041926144/Picsart_25-06-04_11-16-26-948.png?ex=6841d8a7&is=68408727&hm=7c99356cae6b0a7912797204ca4fc3ad04fdfb8c602544b2060f8409a39d2582&" alt="Logo">
     <div class="fact" id="fact"></div>
     <div class="bar"><div class="rod"></div></div>
-    <a class="discord" href="https://discord.gg/your-server-invite" target="_blank">
+    <a class="discord" href="https://discord.gg/getfalcon" target="_blank">
       <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord Logo">
     </a>
   </div>
-
   <div class="next" id="home">
-    <div class="title">
-      <span class="gradient1" id="type-text"></span>
-    </div>
+    <div class="title">Falcon Executor</div>
     <a class="btn" href="#">soon</a>
     <a class="discord" href="https://discord.gg/your-server-invite" target="_blank">
       <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord Logo">
@@ -182,7 +154,7 @@
       "Did you know? First roblox exploiters was roblox's own admins",
       "Did you know? Synapse x was released in 2016 and was shut down in 2023, it ran for 7 years!!",
       "Did you know? Synapse x was created by Louka"
-   ];
+    ];
     let idx = Math.floor(Math.random() * facts.length);
     document.addEventListener('DOMContentLoaded', () => {
       let factEl = document.getElementById('fact');
@@ -190,43 +162,14 @@
     });
 
     setTimeout(() => {
-      document.getElementById('load').classList.add('fade');
+      let load = document.getElementById('load');
+      let home = document.getElementById('home');
+      load.classList.add('fade');
       setTimeout(() => {
-        document.getElementById('load').style.display = 'none';
-        document.getElementById('home').style.display = 'flex';
-        typeCycle();
+        load.style.display = 'none';
+        home.style.display = 'flex';
       }, 1000);
     }, 5500);
-
-    const titles = [
-      "<span class='gradient1'>Falcon Executor</span>",
-      "<span class='gradient2'>Safest Executor</span>",
-      "<span class='gradient1'>PC Executor</span>"
-    ];
-
-    let titleIndex = 0;
-    let charIndex = 0;
-    let typing = true;
-    const target = document.getElementById("type-text");
-
-    function typeCycle() {
-      if (typing) {
-        if (charIndex < titles[titleIndex].length) {
-          target.innerHTML += titles[titleIndex].charAt(charIndex);
-          charIndex++;
-          setTimeout(typeCycle, 100);
-        } else {
-          typing = false;
-          setTimeout(() => {
-            typing = true;
-            charIndex = 0;
-            titleIndex = (titleIndex + 1) % titles.length;
-            target.innerHTML = "";
-            typeCycle();
-          }, 2000);
-        }
-      }
-    }
   </script>
 </body>
-      </html>
+</html>
