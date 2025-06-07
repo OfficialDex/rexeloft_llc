@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Falcon</title>
+  <title>Falcon Executor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Black+Rose&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light+Two&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
       color: white;
     }
 
-    .wrap {
+    .wrap, .next {
       height: 100vh;
       display: flex;
       justify-content: center;
@@ -24,7 +24,6 @@
       box-sizing: border-box;
       text-align: center;
       position: relative;
-      animation: fadeIn 1.5s ease-out;
     }
 
     .logo-img {
@@ -32,7 +31,18 @@
       max-width: 200px;
       height: auto;
       margin-bottom: 20px;
-      animation: popIn 1s ease-out;
+      animation: zoomIn 2s ease;
+    }
+
+    @keyframes zoomIn {
+      0% {
+        transform: scale(0.7);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
 
     .fact {
@@ -40,7 +50,8 @@
       margin: 20px 0;
       color: #ccc;
       font-family: 'Shadows Into Light Two', cursive;
-      animation: popIn 1.4s ease-out;
+      opacity: 0;
+      animation: fadeIn 2s ease 1s forwards;
     }
 
     .bar {
@@ -68,35 +79,31 @@
       100% { left: 100%; }
     }
 
-    .fade {
-      animation: fadeout 1s forwards;
-    }
-
-    @keyframes fadeout {
+    @keyframes fadeOut {
       to {
         opacity: 0;
         visibility: hidden;
       }
     }
 
+    .fade {
+      animation: fadeOut 1s forwards;
+    }
+
     .next {
       display: none;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      height: 100vh;
-      text-align: center;
-      padding: 20px;
-      box-sizing: border-box;
       background: black;
-      animation: fadeIn 1s ease-out;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
     }
 
     .title {
       font-size: 10vw;
       margin-bottom: 30px;
       color: white;
-      animation: popIn 0.8s ease-out;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideUp 1s ease 1s forwards;
     }
 
     .btn {
@@ -110,12 +117,9 @@
       cursor: pointer;
       text-decoration: none;
       font-family: 'Shadows Into Light Two', cursive;
-      animation: popIn 1.2s ease-out;
-      transition: transform 0.2s ease;
-    }
-
-    .btn:hover {
-      transform: scale(1.05);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideUp 1s ease 1.5s forwards;
     }
 
     .discord {
@@ -125,7 +129,8 @@
       transform: translateX(-50%);
       width: 40px;
       height: 40px;
-      animation: popIn 1.5s ease-out;
+      animation: fadeIn 1.5s ease 2s forwards;
+      opacity: 0;
     }
 
     .discord img {
@@ -134,27 +139,25 @@
       object-fit: contain;
       cursor: pointer;
       filter: drop-shadow(0 0 8px #7289da);
-      transition: transform 0.3s ease;
-    }
-
-    .discord img:hover {
-      transform: scale(1.1);
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
+      to {
+        opacity: 1;
+      }
     }
 
-    @keyframes popIn {
-      0% { opacity: 0; transform: scale(0.5); }
-      100% { opacity: 1; transform: scale(1); }
+    @keyframes slideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
 <body>
   <div class="wrap" id="load">
-    <img class="logo-img" src="https://cdn.discordapp.com/attachments/1364298828899160146/1379698549041926144/Picsart_25-06-04_11-16-26-948.png?ex=6841d8a7&is=68408727&hm=7c99356cae6b0a7912797204ca4fc3ad04fdfb8c602544b2060f8409a39d2582&" alt="Logo">
+    <img class="logo-img" src="https://cdn.discordapp.com/attachments/1364298828899160146/1379698549041926144/Picsart_25-06-04_11-16-26-948.png" alt="Logo">
     <div class="fact" id="fact"></div>
     <div class="bar"><div class="rod"></div></div>
     <a class="discord" href="https://discord.gg/getfalcon" target="_blank">
@@ -163,8 +166,8 @@
   </div>
   <div class="next" id="home">
     <div class="title">Falcon Executor</div>
-    <a class="btn" href="#">soon</a>
-    <a class="discord" href="https://discord.gg/your-server-invite" target="_blank">
+    <a class="btn" href="#">Soon</a>
+    <a class="discord" href="https://discord.gg/getfalcon" target="_blank">
       <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord Logo">
     </a>
   </div>
@@ -176,21 +179,20 @@
       "Did you know? The first ever Roblox Executor name was Silent Cowz Pro 10.",
       "Did you know? Roblox Lua is known as LuaU.",
       "Did you know? Most developer in our team are old exploit devs or retired.",
-      "Did you know? There are more ratted Pc executors than actual, be careful",
-      "Did you know? Moonsec obfuscation is no longer powerful and can be decompiled now",
-      "Did you know? First roblox exploiters was roblox's own admins",
-      "Did you know? Synapse x was released in 2016 and was shut down in 2023, it ran for 7 years!!",
-      "Did you know? Synapse x was created by Louka"
+      "Did you know? There are more ratted PC executors than actual ones, be careful.",
+      "Did you know? Moonsec obfuscation is no longer powerful and can be decompiled now.",
+      "Did you know? First Roblox exploiters were Roblox's own admins.",
+      "Did you know? Synapse X was released in 2016 and shut down in 2023 — ran for 7 years!",
+      "Did you know? Synapse X was created by Louka."
     ];
-    let idx = Math.floor(Math.random() * facts.length);
     document.addEventListener('DOMContentLoaded', () => {
       let factEl = document.getElementById('fact');
-      factEl.textContent = facts[idx];
+      factEl.textContent = facts[Math.floor(Math.random() * facts.length)];
     });
 
     setTimeout(() => {
-      let load = document.getElementById('load');
-      let home = document.getElementById('home');
+      const load = document.getElementById('load');
+      const home = document.getElementById('home');
       load.classList.add('fade');
       setTimeout(() => {
         load.style.display = 'none';
@@ -199,4 +201,4 @@
     }, 5500);
   </script>
 </body>
-      </html>
+</html>
