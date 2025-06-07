@@ -169,7 +169,7 @@
 </head>
 <body>
   <div class="wrap" id="load">
-    <img class="logo-img" src="https://cdn.discordapp.com/attachments/1364298828899160146/1379698549041926144/Picsart_25-06-04_11-16-26-948.png" alt="Logo">
+    <img class="logo-img" src="https://cdn.discordapp.com/attachments/1364298828899160146/1379698549041926144/Picsart_25-06-04_11-16-26-948.png?ex=68452467&is=6843d2e7&hm=e62d041aafbc235f813454ed7cfb76c08c09f350c1be506a1b60b7e200645a66&" alt="Logo">
     <div class="fact" id="fact"></div>
     <div class="bar"><div class="rod"></div></div>
     <a class="discord" href="https://discord.gg/getfalcon" target="_blank">
@@ -183,7 +183,7 @@
       <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord Logo">
     </a>
   </div>
-
+<!-- javascript part -->
   <script>
     let facts = [
       "Did you know? Our old name used to be chrono.",
@@ -197,9 +197,9 @@
       "Did you know? Synapse X was released in 2016 and was shut down in 2023, it ran for 7 years!",
       "Did you know? Synapse X was created by Louka."
     ];
-    let idx = Math.floor(Math.random() * facts.length);
+    let index = Math.floor(Math.random() * facts.length);
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('fact').textContent = facts[idx];
+      document.getElementById('fact').textContent = facts[index];
     });
 
     setTimeout(() => {
