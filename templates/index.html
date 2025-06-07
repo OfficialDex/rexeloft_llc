@@ -3,12 +3,13 @@
 <head>
   <title>Falcon Executor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Black+Rose&family=Raleway:wght@600&family=Shadows+Into+Light+Two&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Black+Rose&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light+Two&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       background: black;
-      font-family: 'Black Rose', cursive;
+      font-family: 'Raleway', sans-serif;
       overflow: hidden;
       color: white;
     }
@@ -30,8 +31,6 @@
       max-width: 200px;
       height: auto;
       margin-bottom: 20px;
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
     }
 
     .fact {
@@ -39,8 +38,6 @@
       margin: 20px 0;
       color: #ccc;
       font-family: 'Shadows Into Light Two', cursive;
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
     }
 
     .bar {
@@ -51,8 +48,6 @@
       overflow: hidden;
       border-radius: 5px;
       position: relative;
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
     }
 
     .rod {
@@ -91,53 +86,46 @@
       padding: 20px;
       box-sizing: border-box;
       background: black;
-      animation: fadeIn 2s ease-in-out forwards;
+      opacity: 0;
+      animation: fadein 1.5s ease forwards;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    @keyframes fadein {
+      to { opacity: 1; }
     }
 
     .title {
-      font-family: 'Raleway', sans-serif;
       font-size: 10vw;
       margin-bottom: 30px;
       color: white;
-      transition: all 1s ease;
     }
 
-    .gradient-word {
-      background: linear-gradient(to right, #a800ff, #00d0ff);
+    .gradient1 {
+      background: linear-gradient(to right, purple, blue);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    .gradient-word-2 {
-      background: linear-gradient(to right, #ff1e56, #ffac41);
+    .gradient2 {
+      background: linear-gradient(to right, red, #ff4d88);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .btn {
       padding: 15px 40px;
-      background: linear-gradient(135deg, #0a0c2a 0%, #0a0c2a 40%, #007bff 41%, #0a0c2a 60%, #0a0c2a 90%, #007bff 100%);
-      border: none;
+      background: #03071e;
       border-radius: 50px;
       font-size: 5vw;
       color: white;
       cursor: pointer;
       text-decoration: none;
       font-family: 'Shadows Into Light Two', cursive;
-      transition: all 0.4s ease-in-out;
-      margin-top: 20px;
-      box-shadow: 0 0 10px #007bff;
+      border: 2px solid transparent;
+      background-image: linear-gradient(to right, #0af, #0af), linear-gradient(to right, #0af, #0af);
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      transition: transform 0.4s ease;
     }
 
     .btn:hover {
@@ -160,24 +148,22 @@
       cursor: pointer;
       filter: drop-shadow(0 0 8px #7289da);
     }
-
-    .visible {
-      opacity: 1 !important;
-    }
   </style>
 </head>
 <body>
   <div class="wrap" id="load">
-    <img class="logo-img" id="logo" src="https://cdn.discordapp.com/attachments/1364298828899160146/1379698549041926144/Picsart_25-06-04_11-16-26-948.png?ex=68428167&is=68412fe7&hm=7ff05722edf153fb6817e27e862f2477f28199ba910828bb40237eed3becf2af&" alt="Logo">
+    <img class="logo-img" src="https://media.discordapp.net/attachments/1268581885966155817/1273970010569838615/IMG_1090.png?ex=6840d9c7&is=683f8847&hm=015d83af73124da4691cf8681bfb07791d145f15fc50dd2732ec2d63a7c8eb12&" alt="Logo">
     <div class="fact" id="fact"></div>
-    <div class="bar" id="bar"><div class="rod"></div></div>
+    <div class="bar"><div class="rod"></div></div>
     <a class="discord" href="https://discord.gg/your-server-invite" target="_blank">
       <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord Logo">
     </a>
   </div>
 
   <div class="next" id="home">
-    <div class="title" id="typebox"></div>
+    <div class="title">
+      <span class="gradient1" id="type-text"></span>
+    </div>
     <a class="btn" href="#">soon</a>
     <a class="discord" href="https://discord.gg/your-server-invite" target="_blank">
       <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord Logo">
@@ -197,66 +183,50 @@
       "Did you know? Synapse x was released in 2016 and was shut down in 2023, it ran for 7 years!!",
       "Did you know? Synapse x was created by Louka"
    ];
-
+    let idx = Math.floor(Math.random() * facts.length);
     document.addEventListener('DOMContentLoaded', () => {
       let factEl = document.getElementById('fact');
-      let logo = document.getElementById('logo');
-      let bar = document.getElementById('bar');
-      let idx = Math.floor(Math.random() * facts.length);
       factEl.textContent = facts[idx];
-      setTimeout(() => {
-        factEl.classList.add('visible');
-        logo.classList.add('visible');
-        bar.classList.add('visible');
-      }, 100);
     });
 
     setTimeout(() => {
-      let load = document.getElementById('load');
-      let home = document.getElementById('home');
-      load.classList.add('fade');
+      document.getElementById('load').classList.add('fade');
       setTimeout(() => {
-        load.style.display = 'none';
-        home.style.display = 'flex';
+        document.getElementById('load').style.display = 'none';
+        document.getElementById('home').style.display = 'flex';
+        typeCycle();
       }, 1000);
     }, 5500);
 
-    let phrases = [
-      "Welcome to <span class='gradient-word'>Falcon Executor</span>",
-      "The <span class='gradient-word-2'>Safest</span> and <span class='gradient-word'>Most Powerful</span>",
-      "<span class='gradient-word'>PC Executor</span> Built for Speed"
+    const titles = [
+      "<span class='gradient1'>Falcon Executor</span>",
+      "<span class='gradient2'>Safest Executor</span>",
+      "<span class='gradient1'>PC Executor</span>"
     ];
 
-    let typebox = document.getElementById('typebox');
-    let phraseIndex = 0;
+    let titleIndex = 0;
     let charIndex = 0;
     let typing = true;
+    const target = document.getElementById("type-text");
 
-    function typeEffect() {
-      let raw = phrases[phraseIndex].replace(/<[^>]+>/g, '');
+    function typeCycle() {
       if (typing) {
-        if (charIndex < raw.length) {
-          typebox.innerHTML = phrases[phraseIndex].slice(0, charIndex + 1);
+        if (charIndex < titles[titleIndex].length) {
+          target.innerHTML += titles[titleIndex].charAt(charIndex);
           charIndex++;
-          setTimeout(typeEffect, 100);
+          setTimeout(typeCycle, 100);
         } else {
           typing = false;
-          setTimeout(typeEffect, 1500);
-        }
-      } else {
-        if (charIndex > 0) {
-          typebox.innerHTML = phrases[phraseIndex].slice(0, charIndex - 1);
-          charIndex--;
-          setTimeout(typeEffect, 50);
-        } else {
-          typing = true;
-          phraseIndex = (phraseIndex + 1) % phrases.length;
-          setTimeout(typeEffect, 200);
+          setTimeout(() => {
+            typing = true;
+            charIndex = 0;
+            titleIndex = (titleIndex + 1) % titles.length;
+            target.innerHTML = "";
+            typeCycle();
+          }, 2000);
         }
       }
     }
-
-    setTimeout(typeEffect, 6500);
   </script>
 </body>
-</html>
+      </html>
